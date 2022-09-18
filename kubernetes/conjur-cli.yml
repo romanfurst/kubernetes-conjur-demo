@@ -24,4 +24,5 @@ spec:
         command: ["sleep"]
         args: ["infinity"]
       imagePullSecrets:
-        - name: dockerpullsecret
+        #- name: dockerpullsecret
+        - name: nexus3

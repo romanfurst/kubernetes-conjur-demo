@@ -9,9 +9,10 @@ elif [ $PLATFORM = 'openshift' ]; then
 fi
 
 init_bash_lib() {
-  git submodule update --init --recursive
-  bash_lib="$(dirname "${BASH_SOURCE[0]}")/bash-lib"
-  . "${bash_lib}/init"
+  echo ""
+  #git submodule update --init --recursive
+  #bash_lib="$(dirname "${BASH_SOURCE[0]}")/bash-lib"
+  #. "${bash_lib}/init"
 }
 
 check_env_var() {
@@ -46,27 +47,29 @@ announce() {
 }
 
 platform_image_for_pull() {
-  if [[ ${PLATFORM} = "openshift" ]]; then
-    echo "${PULL_DOCKER_REGISTRY_PATH}/$TEST_APP_NAMESPACE_NAME/$1:$TEST_APP_NAMESPACE_NAME"
-  elif is_minienv; then
-    echo "$1:$CONJUR_NAMESPACE_NAME"
-  elif [[ "$USE_DOCKER_LOCAL_REGISTRY" = "true" ]]; then
-    echo "${PULL_DOCKER_REGISTRY_URL}/$1:$CONJUR_NAMESPACE_NAME"
-  else
-    echo "${PULL_DOCKER_REGISTRY_PATH}/$1:$CONJUR_NAMESPACE_NAME"
-  fi
+  echo "nexus3.kb.cz:18443/cyberark/conjur-cli:$CONJUR_VERSION-latest"
+#  if [[ ${PLATFORM} = "openshift" ]]; then
+#    echo "${PULL_DOCKER_REGISTRY_PATH}/$TEST_APP_NAMESPACE_NAME/$1:$TEST_APP_NAMESPACE_NAME"
+#  elif is_minienv; then
+#    echo "$1:$CONJUR_NAMESPACE_NAME"
+#  elif [[ "$USE_DOCKER_LOCAL_REGISTRY" = "true" ]]; then
+#    echo "${PULL_DOCKER_REGISTRY_URL}/$1:$CONJUR_NAMESPACE_NAME"
+#  else
+#    echo "${PULL_DOCKER_REGISTRY_PATH}/$1:$CONJUR_NAMESPACE_NAME"
+#  fi
 }
 
 platform_image_for_push() {
-  if [[ ${PLATFORM} = "openshift" ]]; then
-    echo "${DOCKER_REGISTRY_PATH}/$TEST_APP_NAMESPACE_NAME/$1:$TEST_APP_NAMESPACE_NAME"
-  elif is_minienv; then
-    echo "$1:$CONJUR_NAMESPACE_NAME"
-  elif [[ "$USE_DOCKER_LOCAL_REGISTRY" = "true" ]]; then
-    echo "${DOCKER_REGISTRY_URL}/$1:$CONJUR_NAMESPACE_NAME"
-  else
-    echo "${DOCKER_REGISTRY_PATH}/$1:$CONJUR_NAMESPACE_NAME"
-  fi
+  echo "nexus3.kb.cz:18444/cyberark/conjur-cli:$CONJUR_VERSION-latest"
+#  if [[ ${PLATFORM} = "openshift" ]]; then
+#    echo "${DOCKER_REGISTRY_PATH}/$TEST_APP_NAMESPACE_NAME/$1:$TEST_APP_NAMESPACE_NAME"
+#  elif is_minienv; then
+#    echo "$1:$CONJUR_NAMESPACE_NAME"
+#  elif [[ "$USE_DOCKER_LOCAL_REGISTRY" = "true" ]]; then
+#    echo "${DOCKER_REGISTRY_URL}/$1:$CONJUR_NAMESPACE_NAME"
+#  else
+#    echo "${DOCKER_REGISTRY_PATH}/$1:$CONJUR_NAMESPACE_NAME"
+#  fi
 }
 
 has_namespace() {

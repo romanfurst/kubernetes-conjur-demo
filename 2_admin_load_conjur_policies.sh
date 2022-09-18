@@ -45,7 +45,8 @@ ensure_conjur_cli_initialized() {
   else
     conjur_service='conjur-master'
   fi
-  conjur_url=${CONJUR_APPLIANCE_URL:-https://$conjur_service.$CONJUR_NAMESPACE_NAME.svc.cluster.local}
+  #conjur_url=${CONJUR_APPLIANCE_URL:-https://$conjur_service.$CONJUR_NAMESPACE_NAME.svc.cluster.local}
+  conjur_url=${CONJUR_APPLIANCE_URL:-http://$conjur_service.$CONJUR_NAMESPACE_NAME.svc.cluster.local}
 
   $cli exec $1 -- bash -c "yes yes | conjur init -a $CONJUR_ACCOUNT -u $conjur_url"
   $cli exec $1 -- conjur authn login -u admin -p $CONJUR_ADMIN_PASSWORD
@@ -97,7 +98,7 @@ set_namespace "$CONJUR_NAMESPACE_NAME"
 announce "Finding or creating a Conjur CLI pod"
 conjur_cli_pod=$(get_conjur_cli_pod_name)
 if [ -z "$conjur_cli_pod" ]; then
-  prepare_conjur_cli_image
+  #prepare_conjur_cli_image
   deploy_conjur_cli
   conjur_cli_pod=$(get_conjur_cli_pod_name)
 fi

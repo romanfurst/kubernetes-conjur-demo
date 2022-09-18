@@ -15,12 +15,12 @@ if [[ "${CONFIGURE_CONJUR_MASTER}" == "true" || "${CONJUR_OSS_HELM_INSTALLED}" =
   # Only automatically run these scripts for dev/demo envs deploying a master
   # cluster directly to k8s/oc
   ./2_admin_load_conjur_policies.sh
-  ./3_admin_init_conjur_cert_authority.sh
+  #./3_admin_init_conjur_cert_authority.sh
 fi
 
-./4_app_create_namespace.sh
-./5_app_store_conjur_cert.sh
-./6_app_build_and_push_containers.sh
-./7_app_deploy.sh
-./8_app_verify_authentication.sh
+#./4_app_create_namespace.sh
+#./5_app_store_conjur_cert.sh
+#./6_app_build_and_push_containers.sh
+#./7_app_deploy.sh
+#./8_app_verify_authentication.sh
 
