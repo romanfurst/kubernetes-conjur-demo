@@ -1,0 +1,126 @@
+#!/bin/bash
+
+: "${BASH_LIB_DIR:?BASH_LIB_DIR must be set. Please source bash-lib/init before other scripts from bash-lib.}"
+
+
+function bl_git_available(){
+    type git &>/dev/null || bl_fail "Git binary not found in ${PATH}"
+}
+
+function bl_in_git_repo(){
+    bl_git_available
+    git status >/dev/null || bl_fail "$(pwd) is not within a git repo."
+}
+
+function bl_github_owner_repo(){
+    bl_in_git_repo
+    remote="${1:-origin}"
+
+    git remote -v | grep -q "${remote}" || bl_die "Remote ${remote} doesn't exist for repo ${PWD}"
+    git remote -v | grep -q "${remote}.*github" || bl_die "Remote ${remote} is not a github remote in repo ${PWD}"
+    [[ "$(git remote -v |grep "${remote}")" =~ github.com[:/]([^ .]*) ]]
+    echo "${BASH_REMATCH[1]}"
+}
+
+# Get the top level of a git repo
+function bl_repo_root(){
+    bl_in_git_repo
+    git rev-parse --show-toplevel
+}
+
+# List files tracked by git excluding submodules
+function bl_all_files_in_repo(){
+    bl_in_git_repo
+    git ls-files -s | grep -v ^16 | cut -f2-
+    #             ^- show status code ^16 = submodule
+    #                 ^- exclude submodules
+    #                               ^- return only file paths (not status code)
+}
+
+# Find the latest tag available at a repo url
+# Returns tag name, not sha
+function bl_remote_latest_tag(){
+    bl_in_git_repo
+
+    local -r remote_url="${1}"
+    # In ls-remote the ^{} suffix refers to a peeled/dereferenced object.
+    # eg refs/tags/v0.0.1^{} shows the SHA of the commit that was tagged,
+    # not the SHA of the tag itself.
+    # Adding --refs hides peeled tags
+    git ls-remote --tags --refs --quiet \
+        "${remote_url}" \
+        | tail -n 1 \
+        | cut -f 2 \
+        | sed -e 's+refs/tags/++'
+}
+
+# Find the SHA of the latests commit to be tagged in a remote repo
+function bl_remote_latest_tagged_commit(){
+    bl_in_git_repo
+
+    local -r remote="${1}"
+    local -r tag="$(bl_remote_latest_tag "${remote}")"
+    git ls-remote "${remote}" | awk "/refs\/tags\/${tag}\^/{print \$1}"
+}
+
+function bl_remote_sha_for_ref(){
+    bl_in_git_repo
+
+    local -r remote="${1}"
+    local -r ref="${2}"
+    local peeled_ref
+
+    # First try adding ^{} to the ref, incase it's a tag
+    # and needs peeling. If nothing is found for that,
+    # try without.
+    peeled_ref=$(
+        git ls-remote "${remote}" \
+            | awk "/${ref}[^$]/{print \$1}"
+    )
+
+    if [[ -n "${peeled_ref}" ]]; then
+        echo "${peeled_ref}"
+    else
+        git ls-remote "${remote}" \
+            | awk "/${ref}/{print \$1}"
+    fi
+}
+
+function bl_remote_tag_for_sha(){
+    bl_in_git_repo
+
+    local -r remote="${1}"
+    local -r sha="${2}"
+    git ls-remote "${remote}" \
+        | awk -F'/' "/${sha}.*tag/{ gsub(/\^\{\}\$/, \"\"); print \$3 }"
+}
+
+
+## Minimal git subtree functionality required for tests to pass
+# full subtree functionality is not ready for merge.
+function bl_gittrees_present(){
+    bl_in_git_repo
+    local -r git_trees="$(bl_repo_root)/.gittrees"
+    [[ -e "${git_trees}" ]]
+}
+
+function bl_cat_gittrees(){
+    bl_in_git_repo
+    local -r git_trees="$(bl_repo_root)/.gittrees"
+    local -r subtrees_file_format=".gittrees should contain one subtree per line,\
+space seperated with three fields: subtree_path renmote_url remote_name"
+    bl_gittrees_present || bl_die ".gittrees file ${git_trees} not found. ${subtrees_file_format}"
+    grep -E -v '^\s*$|^\s*#' "$(bl_repo_root)/.gittrees" || true
+}
+
+function bl_tracked_files_excluding_subtrees(){
+    bl_in_git_repo
+    local subtrees
+    if bl_gittrees_present; then
+        subtrees="$(bl_cat_gittrees | awk '{print $1}' | paste -sd '|' -)"
+        bl_all_files_in_repo | grep -E -v "${subtrees}"
+    else
+        bl_log debug ".gittrees not found subtress not excluded" stderr
+        bl_all_files_in_repo
+    fi
+}
