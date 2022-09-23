@@ -127,6 +127,12 @@
       annotations:
         kubernetes/authentication-container-name: secretless
         openshift: "{{ IS_OPENSHIFT }}"
+    - !host
+      id: conjur-secret-provider
+      annotations:
+        authn-k8s/namespace: {{ TEST_APP_NAMESPACE_NAME }}
+        authn-k8s/service-account: speed-microservice
+        authn-k8s/deployment: conjur-secret-provider
 
   - !grant
     role: !layer

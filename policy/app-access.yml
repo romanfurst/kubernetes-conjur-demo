@@ -50,3 +50,19 @@
       role: !layer /test-app
       privileges: [ read, execute ]
       resources: *secretless-variables
+
+- !policy
+  id: speed-sample-conjur-some-credentials
+  owner: !group secrets_admin
+  annotations:
+    description: This policy contains the creds to access the conjur-secret-providerDB
+
+  body:
+    - &provider-variables
+      - !variable password
+      - !variable username
+
+    - !permit
+      role: !layer /passwordrotationapp
+      privileges: [ read, execute ]
+      resources: *provider-variables

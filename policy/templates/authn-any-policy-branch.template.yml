@@ -27,6 +27,11 @@
   role: !layer test-app
   members: !layer some-apps
 
+# Inherit PasswordRotationApp's permissions
+- !grant
+  role: !layer passwordrotationapp
+  members: !layer some-apps
+
 # Allow the host to authenticate with the authn-k8s authenticator
 - !grant
   role: !layer conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/users

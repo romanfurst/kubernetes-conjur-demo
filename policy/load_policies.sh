@@ -69,4 +69,9 @@ for app_name in "${APPS[@]}"; do
   fi
 done
 
+echo "Loading secret values for conjur-secret-provider"
+conjur variable values add "speed-sample-conjur-some-credentials/password" "pussyword"
+conjur variable values add "speed-sample-conjur-some-credentials/username" "romisek"
+
+
 conjur authn logout
