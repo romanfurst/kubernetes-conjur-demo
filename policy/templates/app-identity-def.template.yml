@@ -11,7 +11,7 @@
   - !grant
     role: !layer 
     members:
-    - !layer /conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/apps
+    - !layer /conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/passwordrotationapp
 - !policy
   id: passwordrotationapp
   owner: !group devops
@@ -24,4 +24,4 @@
   - !grant
     role: !layer 
     members:
-    - !layer /conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/apps
+    - !layer /conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/passwordrotationapp

@@ -49,6 +49,6 @@
 - !grant
   role: !layer conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/users
   members:
-    - !layer conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/apps
+    - !layer conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/passwordrotationapp
     - !host conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/{{ VALIDATOR_ID }}
     - !host conjur/authn-k8s/{{ AUTHENTICATOR_ID }}/{{ APP_VALIDATOR_ID }}
