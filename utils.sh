@@ -47,7 +47,7 @@ announce() {
 }
 
 platform_image_for_pull() {
-  echo "nexus3.kb.cz:18443/cyberark/conjur-cli:$CONJUR_VERSION-latest"
+  echo "cyberark/conjur-cli:$CONJUR_VERSION-latest"
 #  if [[ ${PLATFORM} = "openshift" ]]; then
 #    echo "${PULL_DOCKER_REGISTRY_PATH}/$TEST_APP_NAMESPACE_NAME/$1:$TEST_APP_NAMESPACE_NAME"
 #  elif is_minienv; then
@@ -60,7 +60,7 @@ platform_image_for_pull() {
 }
 
 platform_image_for_push() {
-  echo "nexus3.kb.cz:18444/cyberark/conjur-cli:$CONJUR_VERSION-latest"
+  echo "cyberark/conjur-cli:$CONJUR_VERSION-latest"
 #  if [[ ${PLATFORM} = "openshift" ]]; then
 #    echo "${DOCKER_REGISTRY_PATH}/$TEST_APP_NAMESPACE_NAME/$1:$TEST_APP_NAMESPACE_NAME"
 #  elif is_minienv; then
@@ -133,7 +133,8 @@ run_conjur_cmd_as_admin() {
 
 conjur_service_account() {
   if [[ "$CONJUR_OSS_HELM_INSTALLED" == "true" ]]; then
-    echo "conjur-oss"
+    #echo "conjur-oss"
+    echo "devc-cyberark-conjur-oss"
   else
     echo "conjur-cluster"
   fi

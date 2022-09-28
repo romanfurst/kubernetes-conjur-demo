@@ -70,8 +70,12 @@ for app_name in "${APPS[@]}"; do
 done
 
 echo "Loading secret values for conjur-secret-provider"
-conjur variable values add "speed-sample-conjur-some-credentials/password" "pussyword"
-conjur variable values add "speed-sample-conjur-some-credentials/username" "romisek"
+conjur variable values add "smoke-test-credentials/password" "pussyword"
+conjur variable values add "smoke-test-credentials/username" "romisek"
+conjur variable values add "jdbc-credentials/password" "caprice"
+conjur variable values add "jdbc-credentials/username" "little"
+conjur variable values add "ldap-credentials/password" "sracka"
+conjur variable values add "ldap-credentials/username" "hovno"
 
 
 conjur authn logout

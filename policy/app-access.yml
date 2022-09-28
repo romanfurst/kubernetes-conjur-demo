@@ -52,17 +52,49 @@
       resources: *secretless-variables
 
 - !policy
-  id: speed-sample-conjur-some-credentials
+  id: smoke-test-credentials
   owner: !group secrets_admin
   annotations:
-    description: This policy contains the creds to access the conjur-secret-providerDB
+    description: This policy contains the smoke-test-credentials creds to conjur-secret-provider can access
 
   body:
-    - &provider-variables
+    - &smoke-test-variables
       - !variable password
       - !variable username
 
     - !permit
       role: !layer /passwordrotationapp
       privileges: [ read, execute ]
-      resources: *provider-variables
+      resources: *smoke-test-variables
+
+- !policy
+  id: jdbc-credentials
+  owner: !group secrets_admin
+  annotations:
+    description: This policy contains the jdbc-credentials creds to conjur-secret-provider can access
+
+  body:
+    - &jdbc-variables
+      - !variable password
+      - !variable username
+
+    - !permit
+      role: !layer /passwordrotationapp
+      privileges: [ read, execute ]
+      resources: *jdbc-variables
+
+- !policy
+  id: ldap-credentials
+  owner: !group secrets_admin
+  annotations:
+    description: This policy contains the ldap-credentials creds to conjur-secret-provider can access
+
+  body:
+    - &ldap-variables
+      - !variable password
+      - !variable username
+
+    - !permit
+      role: !layer /passwordrotationapp
+      privileges: [ read, execute ]
+      resources: *ldap-variables

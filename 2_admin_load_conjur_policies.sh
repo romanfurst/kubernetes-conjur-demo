@@ -41,7 +41,7 @@ ensure_conjur_cli_initialized() {
   announce "Ensure that Conjur CLI pod has a connection with Conjur initialized."
 
   if [[ "$CONJUR_OSS_HELM_INSTALLED" == "true" ]]; then
-    conjur_service='conjur-oss'
+    conjur_service='devc-cyberark-conjur-oss'
   else
     conjur_service='conjur-master'
   fi

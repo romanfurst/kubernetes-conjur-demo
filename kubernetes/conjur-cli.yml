@@ -15,6 +15,7 @@ spec:
       name: conjur-cli
       labels:
         app: conjur-cli
+        sidecar.istio.io/inject: "false"
     spec:
       serviceAccountName: {{ CONJUR_SERVICE_ACCOUNT }}
       containers:
@@ -25,4 +26,4 @@ spec:
         args: ["infinity"]
       imagePullSecrets:
         #- name: dockerpullsecret
-        - name: nexus3
+        - name: docker-user-registry
